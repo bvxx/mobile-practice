@@ -15,6 +15,8 @@ import com.google.android.gms.maps.model.MarkerOptions
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
+    private var userLat: Double = 0.00
+    private var userLng: Double = 0.00
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,8 +31,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         // get username to show at title
         val bundle = intent.extras
         if (bundle != null){
-            var username = bundle.getString("username")
-            title = username + "'s Location"
+            var email = bundle.getString("Email")
+            var lat = bundle.getDouble("Lat")
+            var lng = bundle.getDouble("Lng")
+            title = email + "'s Location"
+            userLat = lat
+            userLng = lng
         }
     }
 
@@ -38,9 +44,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap = googleMap
 
         // Add a marker in Sydney and move the camera
-        val sydney = LatLng(-34.0, 151.0)
-        mMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+        val position = LatLng(userLat, userLng)
+        mMap.addMarker(MarkerOptions().position(position).title("Marker"))
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(position))
+        //mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(position,6F))
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
